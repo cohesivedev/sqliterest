@@ -23,7 +23,7 @@ async function getDBInfo(filename) {
             if(Buffer.isBuffer(example)) {
                 example = '<binary data>';
             }
-            
+
             // todo: throw error if column is a reserved term (like "limit")
             tableColumns[tName][c] = {
                 type: columns[c].type,
@@ -35,28 +35,8 @@ async function getDBInfo(filename) {
     return { tableColumns, tableNames, knex };
 }
 
-function addClauseFromReservedKeywords(dbQuery, query, keyword) {
-    switch (keyword) {
-        case 'select':
-            dbQuery = dbQuery.select(query.select.split(','));
-            break;
-        case 'offset':
-            dbQuery = dbQuery.offset(query.offset);
-            break;
-        case 'limit':
-            dbQuery = dbQuery.limit(query.limit);
-            break;
-        case 'order':
-            query.order.split(',').forEach(orderByString => {
-                const [column, direction] = orderByString.split('.');
-                dbQuery = dbQuery.orderBy(column, direction);
-            });
-            break;
-    }
-}
 
 module.exports = {
     getDBInfo,
-    addClauseFromReservedKeywords,
     capitalize,
 };

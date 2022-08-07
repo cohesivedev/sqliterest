@@ -10,18 +10,18 @@ async function getCountriesApp() {
     const { DOCS, API, knex } = await getRESTFrom({
         filename,
         openapi_info: {
-            title  : 'Countries API',
+            title: 'Countries API',
             version: '0.5.0',
         }
     });
 
     for (const method in API) {
-        for (const route of API[method]) {
-            app[method](route.matcher, route.handler);
+        for (const { matcher, handler, responder } of API[method]) {
+            app[method](matcher, handler, responder);
         }
     }
 
-    return {app, knex, DOCS};
+    return { app, knex, DOCS };
 }
 
 module.exports = getCountriesApp;
