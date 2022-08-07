@@ -20,21 +20,26 @@ This library allows developers to eliminate CRUD boilerplate in their code by:
 - **TODO** Creating a cURL performance test suite
     - https://noc.org/articles/using-curl-to-test-the-performance-of-a-website/
 
+## [Roadmap](todo.md)
+
 ## How to use this
 
 **TODO**
+
 ## Why
 
 - Why not use a sqlite to GraphQL tool like `tuql`?
     - GraphQL cannot return blobs efficiently
     - GraphQL requires additional development tooling on the client side (vs the simplicity of REST)
     - Following Postgrest, it is GraphQL in style but maintains a degree of RESTness about it
+    - [Other reasons where GraphQL may not be appropriate]()
 
 - Are there any alternatives?
     - As of 2022-08-06
         - https://github.com/olsonpm/sqlite-to-rest
             - Generates a skeleton NodeJS Koa server
             - Con: does not provide a set of API docs
+            - Con: updating your DB structure requires a new set of generated files / modification to the original set; meaning it's intended more as a "one-time-use" scaffolding tool
         - https://github.com/dreamfactorysoftware/dreamfactory
             - Does all of the required for SQLite with a full plugin system
             - Limited commercial license, paid
@@ -44,8 +49,10 @@ This library allows developers to eliminate CRUD boilerplate in their code by:
             - GraphQL but does not cleanly install on MacOS Monterrey yet
             - Uses Koa (not as popular as Express)
         - https://github.com/nocodb/nocodb
-            - 
+            - Tool is mainly aimed at non-coders
+            - Pros / Cons: much more framework-like
 
+- Why 
 ## Sample / Tests
 
 See the corresponding [`tests/`](tests/) and `samples/`(samples/) folder.
