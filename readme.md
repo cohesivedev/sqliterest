@@ -52,7 +52,10 @@ This library allows developers to eliminate CRUD boilerplate in their code by:
             - Tool is mainly aimed at non-coders
             - Pros / Cons: much more framework-like
 
-- Why 
+## Used in these apps
+
+- Coming soon...
+
 ## Sample / Tests
 
 See the corresponding [`tests/`](tests/) and `samples/`(samples/) folder.
