@@ -1,0 +1,6 @@
+.DS_Store
+node_modules
+coverage
+openapi.json
+sdk
+openapitools.json
