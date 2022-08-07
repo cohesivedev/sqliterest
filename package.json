@@ -5,6 +5,7 @@
   "author": "jsyang <jsyang.ca@gmail.com>",
   "license": "MIT",
   "scripts": {
+    "run-sample-countries-api" : "node samples/countriesAPI.js",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "watch-test": "NODE_OPTIONS=--experimental-vm-modules jest --watch"
   },
