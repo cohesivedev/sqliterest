@@ -1,7 +1,7 @@
 {
   "name": "sqliterest",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "getRESTFrom.js",
   "author": "jsyang <jsyang.ca@gmail.com>",
   "license": "MIT",
   "scripts": {
@@ -10,12 +10,12 @@
     "watch-test": "NODE_OPTIONS=--experimental-vm-modules jest --watch"
   },
   "devDependencies": {
+    "express": "^4.18.1",
     "jest": "^28.1.3",
     "supertest": "^6.2.4"
   },
   "dependencies": {
     "better-sqlite3": "^7.6.2",
-    "express": "^4.18.1",
     "file-type": "^17.1.4",
     "knex": "^2.2.0"
   },
