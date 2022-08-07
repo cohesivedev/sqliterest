@@ -2,7 +2,7 @@
 
 - Creates a RESTful API from a SQLite DB (the API is determined by the DB structure)
     - Generally follows the Postgrest design philosophy where appropriate for SQLite
-    - Resource embedding 
+    - **TODO** Resource embedding 
         - https://postgrest.org/en/latest/api.html#resource-embedding
         - via https://github.com/knex/knex-schema-inspector#foreign-keys
 
@@ -12,11 +12,9 @@
         - https://openapi-generator.tech/docs/generators
         - `openapi-generator-cli generate --skip-validate-spec -i openapi.json -g javascript -o sdk`
 
-- Creates test suite (using cURL)
+- **TODO** Creates a cURL performance test suite
     - Performance test
         - https://noc.org/articles/using-curl-to-test-the-performance-of-a-website/
-    - Snapshot tests
-        - Save output and use Git itself as the diffing tool to determine if snapshot matches or not!
 
 ## How to use this
 
@@ -32,16 +30,6 @@ It will create a local ExpressJS server on port 3000 and output its API document
 - Redoc: https://redocly.github.io/redoc/
 - Postman
 - SDK generators / Server generators
-
-## Tests
-
-```
-# Run the test suite one time
-yarn test
-
-# Run the test suite in watch mode
-yarn watch-test
-```
 
 ## Why
 
@@ -70,18 +58,17 @@ yarn watch-test
 
 See the corresponding `tests/` and `samples/` folder.
 
+### Running the tests
+
 ```
-CREATE TABLE "countries" (
-    "iso3166alpha2" varchar NOT NULL, 
-    "iso3166alpha3" varchar NOT NULL, 
-    "name" text, 
-    "official_name" text, 
-    "sovereignty" varchar, 
-    "numeric" integer, 
-    "tld" varchar, 
-    PRIMARY KEY ("iso3166alpha2")
-    FOREIGN KEY("sovereignty") REFERENCES sovereignties(name) 
-);
+# Run the test suite one time
+yarn test
+
+# Run the test suite in watch mode
+yarn watch-test
 ```
+
+### About `countries.sqlite3`
+
 - Data source: https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes
 - Flag image source: https://www.translatorscafe.com/cafe/ISO-3166-Country-Codes.htm
