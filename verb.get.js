@@ -1,4 +1,5 @@
-const { RESERVED_KEYWORDS, OPERATORS_WHERE, CHARACTER_REGEX } = require('./constants');
+const { SQLITE_TO_OPENAPI_FIELD_TYPE, RESERVED_KEYWORDS, OPERATORS_WHERE, CHARACTER_REGEX } = require('./constants');
+const { capitalize } = require('./helpers');
 
 function addClauseFromReservedKeywords(dbQuery, query, keyword) {
     switch (keyword) {
@@ -115,7 +116,7 @@ function responder(req, res) {
     if (preparedResponse.statusCode) {
         res.status(preparedResponse.statusCode);
     }
-    
+
     switch (preparedResponse.contentType) {
         case 'application/json':
             res.json(req.preparedResponse.body);
@@ -126,9 +127,70 @@ function responder(req, res) {
     }
 }
 
+function createDocumentation(docs, tableColumns, tableName) {
+    const matcher = `/${tableName}`;
+    docs.paths[matcher] = docs.paths[matcher] || {};
+
+    const tableNameCapitalized = capitalize(tableName);
+    const GetResponseDefName = `${tableNameCapitalized}GetResponse`;
+    const GetResponseItemDefName = `${tableNameCapitalized}GetResponseItem`;
+
+    const docPath = docs.paths[matcher];
+
+    docPath.get = {
+        summary: `Get ${tableName}`,
+        description: `Get all ${tableName} matching the query`,
+        parameters: [],
+        responses: {
+            "200": {
+                description: 'OK',
+                content: { 'application/json': { schema: { $ref: `#/definitions/${GetResponseDefName}` } } }
+            },
+            "400": {
+                description: 'ERROR',
+                content: { 'application/json': { schema: { $ref: '#/definitions/Error400Response' } } }
+            },
+        }
+    };
+
+    docs.definitions[GetResponseDefName] = {
+        type: 'array',
+        items: { $ref: `#/definitions/${GetResponseItemDefName}` },
+    };
+
+    docs.definitions[GetResponseItemDefName] = {
+        type: 'object',
+        properties: {},
+    };
+
+    for (const columnName in tableColumns[tableName]) {
+        const columnResponseSchema = {
+            type: SQLITE_TO_OPENAPI_FIELD_TYPE[tableColumns[tableName][columnName].type],
+            example: tableColumns[tableName][columnName].example,
+        };
+
+        // Don't show docs for querying a blob column
+        if (columnResponseSchema.type === 'binary') {
+            continue;
+        }
+
+        docs.definitions[GetResponseItemDefName].properties[columnName] = columnResponseSchema;
+
+        const columnRequestSchema = {
+            ...columnResponseSchema,
+        };
+
+        docPath.get.parameters.push({
+            name: columnName,
+            in: 'query',
+            required: false,
+            schema: columnRequestSchema,
+        });
+    }
+}
+
 module.exports = {
-    // Executes the query
     createHandler,
-    // Default responder using query result
     responder,
+    createDocumentation,
 };

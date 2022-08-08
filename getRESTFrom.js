@@ -1,5 +1,4 @@
-const { getDBInfo, capitalize } = require('./helpers');
-const { SQLITE_TO_OPENAPI_FIELD_TYPE } = require('./constants');
+const { getDBInfo } = require('./helpers');
 
 const GET = require('./verb.get');
 
@@ -35,75 +34,13 @@ async function getRESTFrom({ filename, openapi_info = {
         'delete': []    // Delete
     };
 
-    // Generate route matchers + handlers
     for (const tableName of tableNames) {
-        const matcher = `/${tableName}`;
 
-        DOCS.paths[matcher] = {};
-
-        // GET documentation and route middleware
-
-        const GetResponseDefName = `${capitalize(tableName)}GetResponse`;
-        const GetResponseItemDefName = `${capitalize(tableName)}GetResponseItem`;
-
-        DOCS.paths[matcher].get = {
-            summary: `Get ${tableName}`,
-            description: `Get all ${tableName} matching the query`,
-            parameters: [],
-            responses: {
-                "200": {
-                    description: 'OK',
-                    content: {
-                        'application/json': { schema: { $ref: `#/definitions/${GetResponseDefName}` } }
-                    }
-                },
-                "400": {
-                    description: 'ERROR',
-                    content: {
-                        'application/json': { schema: { $ref: '#/definitions/Error400Response' } }
-                    }
-                },
-            }
-        };
-
-        DOCS.definitions[GetResponseDefName] = {
-            type: 'array',
-            items: { $ref: `#/definitions/${GetResponseItemDefName}` },
-        };
-
-        DOCS.definitions[GetResponseItemDefName] = {
-            type: 'object',
-            properties: {},
-        };
-
-        for (const columnName in tableColumns[tableName]) {
-            const columnResponseSchema = {
-                type: SQLITE_TO_OPENAPI_FIELD_TYPE[tableColumns[tableName][columnName].type],
-                example: tableColumns[tableName][columnName].example,
-            };
-
-            // Don't show docs for querying a blob column
-            if (columnResponseSchema.type === 'binary') {
-                continue;
-            }
-
-            DOCS.definitions[GetResponseItemDefName].properties[columnName] = columnResponseSchema;
-
-            const columnRequestSchema = {
-                ...columnResponseSchema,
-            };
-
-            DOCS.paths[matcher].get.parameters.push({
-                name: columnName,
-                in: 'query',
-                required: false,
-                schema: columnRequestSchema,
-            });
-        }
+        GET.createDocumentation(DOCS, tableColumns, tableName);
 
         API.get.push({
-            matcher,
-            handler: await GET.createHandler(tableColumns, knex, tableName),
+            matcher  : `/${tableName}`,
+            handler  : await GET.createHandler(tableColumns, knex, tableName),
             responder: GET.responder,
         });            
     }
