@@ -35,8 +35,25 @@ async function getDBInfo(filename) {
     return { tableColumns, tableNames, knex };
 }
 
+function responder(req, res) {
+    const { preparedResponse } = req;
+
+    if (preparedResponse.statusCode) {
+        res.status(preparedResponse.statusCode);
+    }
+
+    switch (preparedResponse.contentType) {
+        case 'application/json':
+            res.json(req.preparedResponse.body);
+            break;
+        default:
+            res.contentType(preparedResponse.contentType);
+            res.send(req.preparedResponse.body);
+    }
+}
 
 module.exports = {
+    responder,
     getDBInfo,
     capitalize,
 };

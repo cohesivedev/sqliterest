@@ -131,4 +131,89 @@ describe('Countries REST API', () => {
         expect(res.body).toMatchSnapshot();
     });
 
+    it('deletes based on queries with EQ', async () => {
+        const resGetBefore = await request(app).get('/countries').query({
+            iso3166alpha2: 'AD',
+            select: 'iso3166alpha2,name',
+        });
+        expect(resGetBefore.body).toMatchSnapshot();
+
+        const resDelete = await request(app).del('/countries').query({
+            iso3166alpha2: 'AD',
+        });
+        expect(resDelete.body).toMatchSnapshot();
+
+        const resGetAfter = await request(app).get('/countries').query({
+            iso3166alpha2: 'AD',
+            select: 'iso3166alpha2,name',
+        });
+        expect(resGetAfter.body).toMatchSnapshot();
+    });
+
+    it('deletes based on queries with IS', async () => {
+        const resGetBefore = await request(app).get('/governments');
+        expect(resGetBefore.body).toMatchSnapshot();
+
+        const resDelete1 = await request(app).del('/governments').query({
+            is_monarchy: `is.true`,
+        });
+        expect(resDelete1.body).toMatchSnapshot();
+
+        const resDelete2 = await request(app).del('/governments').query({
+            is_monarchy: `is.false`,
+        });
+        expect(resDelete2.body).toMatchSnapshot();
+
+        const resDelete3 = await request(app).del('/governments').query({
+            is_monarchy: `is.null`,
+        });
+        expect(resDelete3.body).toMatchSnapshot();
+
+        const resGetAfter = await request(app).get('/governments');
+        expect(resGetAfter.body).toMatchSnapshot(); 
+    });
+
+    it('deletes based on queries with LIKE', async () => {
+        const resGetBefore = await request(app).get('/countries').query({
+            name: 'like."united *"',
+            select: 'iso3166alpha3,name',
+        });
+        expect(resGetBefore.body).toMatchSnapshot();
+
+        const resDelete = await request(app).del('/countries').query({
+            name: `like."united *"`,
+        });
+        expect(resDelete.body).toMatchSnapshot();
+
+        const resGetAfter = await request(app).get('/countries').query({
+            name: 'like."united *"',
+            select: 'iso3166alpha3,name',
+        });
+        expect(resGetAfter.body).toMatchSnapshot();
+    });
+
+    it('deletes based on queries with IN', async () => {
+        const resGetBefore = await request(app).get('/countries').query({
+            tld: `in.(".ca!@,,,,,^",".us",".uk",".au")`,
+            select: 'iso3166alpha3,name,tld',
+        });
+        expect(resGetBefore.body).toMatchSnapshot();
+
+        const resDelete = await request(app).del('/countries').query({
+            tld: `in.(".ca!@,,,,,^",".us",".uk",".au")`,
+        });
+        expect(resDelete.body).toMatchSnapshot();
+
+        const resGetAfter = await request(app).get('/countries').query({
+            tld: `in.(".ca!@,,,,,^",".us",".uk",".au")`,
+            select: 'iso3166alpha3,name,tld',
+        });
+        expect(resGetAfter.body).toMatchSnapshot();
+    });
+
+    it('does not delete if no parameters given', async () => {
+        const resDelete = await request(app).del('/countries');
+        expect(resDelete.body).toMatchSnapshot();
+    });
+
 });

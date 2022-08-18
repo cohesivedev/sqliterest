@@ -1,3 +1,4 @@
+const {execSync} = require('child_process');
 const express = require('express');
 const getRESTFrom = require('../getRESTFrom');
 const path = require('path');
@@ -5,7 +6,10 @@ const path = require('path');
 async function getCountriesApp() {
     const app = express();
 
-    const filename = path.resolve('./countries.sqlite3');
+    // Ensure we keep a master copy free of changes from tests
+    execSync('rm countries.copy.sqlite3 ; cp countries.sqlite3 countries.copy.sqlite3');
+
+    const filename = path.resolve('./countries.copy.sqlite3');
 
     const { DOCS, API, knex } = await getRESTFrom({
         filename,

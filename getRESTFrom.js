@@ -1,11 +1,12 @@
-const { getDBInfo } = require('./helpers');
+const { getDBInfo, responder } = require('./helpers');
 
 const GET = require('./verb.get');
+const DELETE = require('./verb.delete');
 
-async function getRESTFrom({ filename, openapi_info = {
-    title: `Unknown API`,
-    version: '1.0.0',
-} }) {
+async function getRESTFrom({ 
+    filename, 
+    openapi_info, /* https://github.com/OAI/OpenAPI-Specification/blob/main/examples/v3.0/api-with-examples.json#L3 */
+ }) {
     const { tableColumns, tableNames, knex } = await getDBInfo(filename);
 
     // OpenAPI JSON
@@ -18,7 +19,7 @@ async function getRESTFrom({ filename, openapi_info = {
                 type: 'object',
                 properties: {
                     error: {
-                        type: 'string',
+                        type   : 'string',
                         example: 'A detailed error message for the attempted operation'
                     }
                 }
@@ -35,14 +36,19 @@ async function getRESTFrom({ filename, openapi_info = {
     };
 
     for (const tableName of tableNames) {
-
+        API.get.push({
+            matcher: `/${tableName}`,
+            handler: await GET.createHandler(tableColumns, knex, tableName),
+            responder,
+        });
         GET.createDocumentation(DOCS, tableColumns, tableName);
 
-        API.get.push({
-            matcher  : `/${tableName}`,
-            handler  : await GET.createHandler(tableColumns, knex, tableName),
-            responder: GET.responder,
-        });            
+        API.delete.push({
+            matcher: `/${tableName}`,
+            handler: await DELETE.createHandler(tableColumns, knex, tableName),
+            responder,
+        });
+        DELETE.createDocumentation(DOCS, tableColumns, tableName);
     }
 
     return { API, knex, DOCS };

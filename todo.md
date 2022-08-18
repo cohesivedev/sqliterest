@@ -24,8 +24,9 @@
             - [ ] Detailed with operators
     - [ ] PUT (Upsert)
     - [ ] PATCH (Update existing)
-    - [ ] DELETE (Delete)
-
+    - [x] DELETE (Delete)
+        - [ ] All supported operators as per GET
+        - [ ] API documentation in OpenAPI 
 - [ ] Samples
     - [ ] ExpressJS
         - [x] Basic server implementing Countries API

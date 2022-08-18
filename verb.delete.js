@@ -1,28 +1,7 @@
-const { SQLITE_TO_OPENAPI_FIELD_TYPE, RESERVED_KEYWORDS, OPERATORS_WHERE, CHARACTER_REGEX } = require('./constants');
+const { SQLITE_TO_OPENAPI_FIELD_TYPE, OPERATORS_WHERE, CHARACTER_REGEX } = require('./constants');
 const { capitalize } = require('./helpers');
 
-function addClauseFromReservedKeywords(dbQuery, query, keyword) {
-    switch (keyword) {
-        case 'select':
-            dbQuery = dbQuery.select(query.select.split(','));
-            break;
-        case 'offset':
-            dbQuery = dbQuery.offset(query.offset);
-            break;
-        case 'limit':
-            dbQuery = dbQuery.limit(query.limit);
-            break;
-        case 'order':
-            query.order.split(',').forEach(orderByString => {
-                const [column, direction] = orderByString.split('.');
-                dbQuery = dbQuery.orderBy(column, direction);
-            });
-            break;
-    }
-}
-
 async function createHandler(tableColumns, knex, tableName) {
-    const { fileTypeFromBuffer } = await import('file-type');
 
     return async (req, res, next) => {
         const { query } = req;
@@ -30,21 +9,13 @@ async function createHandler(tableColumns, knex, tableName) {
         req.preparedResponse = {};
 
         try {
-            // Defaults
-            let dbQuery = knex.table(tableName)
-                .limit(10);
+            let dbQuery = knex.table(tableName);
+
+            if (Object.keys(query).length === 0) {
+                throw new Error('No deletion parameters provided; total table deletion will not occur');
+            }
 
             for (const key in query) {
-                if (RESERVED_KEYWORDS.includes(key)) {
-                    addClauseFromReservedKeywords(dbQuery, query, key);
-                    continue;
-                }
-
-                const columnInfo = tableColumns[tableName][key];
-
-                // Don't allow queries on blobs
-                if (columnInfo && columnInfo.type === 'blob') continue;
-
                 let whereQueryTemplate = `${key} = ?`;
                 let whereValue = query[key];
 
@@ -79,24 +50,14 @@ async function createHandler(tableColumns, knex, tableName) {
                 dbQuery = dbQuery.whereRaw(whereQueryTemplate, whereValue);
             }
 
-            // console.log(dbQuery.toString());
+            dbQuery = dbQuery.del();
 
             const resBody = await dbQuery;
 
-            // Return the raw blob if there's only one result
-            if (resBody.length === 1 && Object.keys(resBody[0]).length === 1 && Buffer.isBuffer(Object.values(resBody[0])[0])) {
-                const foundContentType = await fileTypeFromBuffer(Object.values(resBody[0])[0].slice(0, 64));
-
-                req.preparedResponse = {
-                    contentType: foundContentType ? foundContentType.mime : 'application/octet-stream',
-                    body: Object.values(resBody[0])[0]
-                };
-            } else {
-                req.preparedResponse = {
-                    contentType: 'application/json',
-                    body: resBody,
-                };
-            }
+            req.preparedResponse = {
+                contentType: 'application/json',
+                body: {},
+            };
         } catch (e) {
             // console.trace(e);
 
@@ -111,24 +72,24 @@ async function createHandler(tableColumns, knex, tableName) {
     }
 }
 
+
 function createDocumentation(docs, tableColumns, tableName) {
     const matcher = `/${tableName}`;
     docs.paths[matcher] = docs.paths[matcher] || {};
 
     const tableNameCapitalized = capitalize(tableName);
-    const GetResponseDefName = `${tableNameCapitalized}GetResponse`;
-    const GetResponseItemDefName = `${tableNameCapitalized}GetResponseItem`;
+    const DeleteResponseDefName = `${tableNameCapitalized}DeleteResponse`;
 
     const docPath = docs.paths[matcher];
 
-    docPath.get = {
-        summary: `Get ${tableName}`,
-        description: `Get all ${tableName} matching the query`,
+    docPath.delete = {
+        summary: `Delete ${tableName}`,
+        description: `Delete all ${tableName} matching the query`,
         parameters: [],
         responses: {
             "200": {
                 description: 'OK',
-                content: { 'application/json': { schema: { $ref: `#/definitions/${GetResponseDefName}` } } }
+                content: { 'application/json': { schema: { $ref: `#/definitions/${DeleteResponseDefName}` } } }
             },
             "400": {
                 description: 'ERROR',
@@ -137,12 +98,7 @@ function createDocumentation(docs, tableColumns, tableName) {
         }
     };
 
-    docs.definitions[GetResponseDefName] = {
-        type: 'array',
-        items: { $ref: `#/definitions/${GetResponseItemDefName}` },
-    };
-
-    docs.definitions[GetResponseItemDefName] = {
+    docs.definitions[DeleteResponseDefName] = {
         type: 'object',
         properties: {},
     };
@@ -158,13 +114,11 @@ function createDocumentation(docs, tableColumns, tableName) {
             continue;
         }
 
-        docs.definitions[GetResponseItemDefName].properties[columnName] = columnResponseSchema;
-
         const columnRequestSchema = {
             ...columnResponseSchema,
         };
 
-        docPath.get.parameters.push({
+        docPath.delete.parameters.push({
             name: columnName,
             in: 'query',
             required: false,

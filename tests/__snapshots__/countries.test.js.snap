@@ -1,5 +1,116 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Countries REST API deletes based on queries with EQ 1`] = `
+Array [
+  Object {
+    "iso3166alpha2": "AD",
+    "name": "Andorra",
+  },
+]
+`;
+
+exports[`Countries REST API deletes based on queries with EQ 2`] = `Object {}`;
+
+exports[`Countries REST API deletes based on queries with EQ 3`] = `Array []`;
+
+exports[`Countries REST API deletes based on queries with IN 1`] = `
+Array [
+  Object {
+    "iso3166alpha3": "AUS",
+    "name": "Australia [b]",
+    "tld": ".au",
+  },
+]
+`;
+
+exports[`Countries REST API deletes based on queries with IN 2`] = `Object {}`;
+
+exports[`Countries REST API deletes based on queries with IN 3`] = `Array []`;
+
+exports[`Countries REST API deletes based on queries with IS 1`] = `
+Array [
+  Object {
+    "is_monarchy": 1,
+    "sovereignty": "British Crown",
+  },
+  Object {
+    "is_monarchy": 1,
+    "sovereignty": "Australia",
+  },
+  Object {
+    "is_monarchy": 0,
+    "sovereignty": "Antarctic Treaty",
+  },
+  Object {
+    "is_monarchy": 0,
+    "sovereignty": "China",
+  },
+  Object {
+    "is_monarchy": 1,
+    "sovereignty": "Denmark",
+  },
+  Object {
+    "is_monarchy": null,
+    "sovereignty": "Disputed",
+  },
+  Object {
+    "is_monarchy": 0,
+    "sovereignty": "France",
+  },
+  Object {
+    "is_monarchy": 1,
+    "sovereignty": "Netherlands",
+  },
+  Object {
+    "is_monarchy": 1,
+    "sovereignty": "New Zealand",
+  },
+  Object {
+    "is_monarchy": 1,
+    "sovereignty": "Norway",
+  },
+]
+`;
+
+exports[`Countries REST API deletes based on queries with IS 2`] = `Object {}`;
+
+exports[`Countries REST API deletes based on queries with IS 3`] = `Object {}`;
+
+exports[`Countries REST API deletes based on queries with IS 4`] = `Object {}`;
+
+exports[`Countries REST API deletes based on queries with IS 5`] = `Array []`;
+
+exports[`Countries REST API deletes based on queries with LIKE 1`] = `
+Array [
+  Object {
+    "iso3166alpha3": "ARE",
+    "name": "United Arab Emirates (the)",
+  },
+  Object {
+    "iso3166alpha3": "GBR",
+    "name": "United Kingdom of Great Britain and Northern Ireland (the)",
+  },
+  Object {
+    "iso3166alpha3": "USA",
+    "name": "United States of America (the)",
+  },
+  Object {
+    "iso3166alpha3": "UMI",
+    "name": "United States Minor Outlying Islands (the) [ac]",
+  },
+]
+`;
+
+exports[`Countries REST API deletes based on queries with LIKE 2`] = `Object {}`;
+
+exports[`Countries REST API deletes based on queries with LIKE 3`] = `Array []`;
+
+exports[`Countries REST API does not delete if no parameters given 1`] = `
+Object {
+  "error": "No deletion parameters provided; total table deletion will not occur",
+}
+`;
+
 exports[`Countries REST API queries with EQ 1`] = `
 Array [
   Object {
