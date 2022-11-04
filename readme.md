@@ -1,6 +1,6 @@
-# SQLiteRest
+# ![SQLiteRest](logo.png)
 
-This library allows developers to eliminate CRUD boilerplate in their code by:
+SQLiteREST is a library allows developers to eliminate CRUD boilerplate in their code by:
 
 - Creating RESTful APIs from SQLite DBs (the API is determined by the DB structure)
     - Generally follows the Postgrest design philosophy where appropriate for SQLite
@@ -21,10 +21,12 @@ This library allows developers to eliminate CRUD boilerplate in their code by:
     - https://noc.org/articles/using-curl-to-test-the-performance-of-a-website/
 
 ## [Roadmap](todo.md)
+## [What's Done](done.md)
 
 ## How to use this
 
-**TODO**
+See the [`countries.app.js`](tests/countries.app.js) for an example of an ExpressJS server that applies SQLiteREST on top of a country database.
+
 
 ## Why
 
