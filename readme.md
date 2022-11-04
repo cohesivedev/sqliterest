@@ -91,3 +91,7 @@ yarn watch-test
 
 - Data source: https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes
 - Flag image source: https://www.translatorscafe.com/cafe/ISO-3166-Country-Codes.htm
+
+--
+
+Developed by [cohesive.dev](https://cohesive.dev).
