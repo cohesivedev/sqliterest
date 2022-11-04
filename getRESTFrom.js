@@ -1,8 +1,8 @@
 const { getDBInfo, responder } = require('./helpers');
 
-const GET = require('./verb.get');
-const DELETE = require('./verb.delete');
-const POST = require('./verb.post');
+const GET = require('./verbs/get');
+const DELETE = require('./verbs/delete');
+const POST = require('./verbs/post');
 
 async function getRESTFrom({
     filename,

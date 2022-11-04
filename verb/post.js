@@ -1,5 +1,5 @@
-const { RESERVED_KEYWORDS_POST } = require('./constants');
-const { capitalize } = require('./helpers');
+const { RESERVED_KEYWORDS_POST } = require('../constants');
+const { capitalize } = require('../helpers');
 
 function filterKeys(keepKeys, obj) {
     const resultObj = {};
