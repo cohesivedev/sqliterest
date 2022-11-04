@@ -1,8 +1,8 @@
 # TODO list
 
 - [ ] All supported HTTP verbs
-    - [ ] POST (Create)
-    - [ ] GET (Read)
+    - [x] POST (Create)
+    - [p] GET (Read)
         - [ ] Supported operators
             - [x] `eq`
             - [x] `neq`
@@ -22,7 +22,7 @@
         - [ ] API documentation in OpenAPI 
             - [x] Basic with examples
             - [ ] Detailed with operators
-    - [ ] PUT (Upsert)
+    - [ ] PUT (Upsert Single)
     - [ ] PATCH (Update existing)
     - [x] DELETE (Delete)
         - [ ] All supported operators as per GET
@@ -34,3 +34,11 @@
         - [ ] Role-based auth example
         - [ ] 2FA example
     - [ ] Client generation example
+
+
+```
+Legend:
+[x] = Fully done
+[p] = Partially done
+[ ] = Not done
+```

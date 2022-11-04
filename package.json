@@ -5,7 +5,7 @@
   "author": "jsyang <jsyang.ca@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "run-sample-countries-api" : "node samples/countriesAPI.js",
+    "run-sample-countries-api": "node samples/countriesAPI.js",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "watch-test": "NODE_OPTIONS=--experimental-vm-modules jest --watch"
   },
@@ -17,9 +17,10 @@
   "dependencies": {
     "better-sqlite3": "^7.6.2",
     "file-type": "^17.1.4",
-    "knex": "^2.2.0"
+    "knex": "^2.2.0",
+    "neat-csv": "^7.0.0"
   },
-  "jest" :{
+  "jest": {
     "collectCoverage": true
   }
 }

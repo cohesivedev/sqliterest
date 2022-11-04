@@ -9,6 +9,10 @@ offset
 order
 `);
 
+const RESERVED_KEYWORDS_POST = linesToArray(`
+columns
+`);
+
 // TODO: logical operators
 const OPERATORS_WHERE = {
     'eq.': '=',
@@ -44,6 +48,7 @@ const SQLITE_FIELD_TO_OPENAPI_DESCRIPTION = {
 
 module.exports = {
     RESERVED_KEYWORDS,
+    RESERVED_KEYWORDS_POST,
     OPERATORS_WHERE,
     CHARACTER_REGEX,
     SQLITE_TO_OPENAPI_FIELD_TYPE,
