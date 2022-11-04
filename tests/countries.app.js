@@ -29,7 +29,7 @@ async function getCountriesApp() {
     }
 
     // Redoc page to present corresponding OpenAPI spec
-    
+
     app.get('/openapi.json', (req, res) => {
         res.sendFile('openapi.json', { root: '.' });
     });
@@ -38,12 +38,10 @@ async function getCountriesApp() {
         res.type('html').send(`
         <html>
         <script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"></script>
-        <body>
+        <body style="margin:0; padding:0">
         <div id="redoc"></div>
         <script>
-            Redoc.init('/openapi.json', {
-                scrollYOffset: 50
-            }, document.getElementById('redoc'));
+            Redoc.init('/openapi.json', {}, document.getElementById('redoc'));
         </script>
         </body>
         </html>

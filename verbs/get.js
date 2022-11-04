@@ -1,5 +1,5 @@
-const { SQLITE_TO_OPENAPI_FIELD_TYPE, RESERVED_KEYWORDS, OPERATORS_WHERE, CHARACTER_REGEX } = require('./constants');
-const { capitalize } = require('./helpers');
+const { SQLITE_TO_OPENAPI_FIELD_TYPE, RESERVED_KEYWORDS, OPERATORS_WHERE, CHARACTER_REGEX } = require('../constants');
+const { capitalize } = require('../helpers');
 
 function addClauseFromReservedKeywords(dbQuery, query, keyword) {
     switch (keyword) {
@@ -122,6 +122,7 @@ function createDocumentation(docs, tableColumns, tableName) {
     const docPath = docs.paths[matcher];
 
     docPath.get = {
+        tags: [tableNameCapitalized],
         summary: `Get ${tableName}`,
         description: `Get all ${tableName} matching the query`,
         parameters: [],

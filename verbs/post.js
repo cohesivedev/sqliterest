@@ -93,8 +93,8 @@ function createDocumentation(docs, tableColumns, tableName) {
 
     const docPath = docs.paths[matcher];
 
-    docPath.post =
-    {
+    docPath.post = {
+        tags: [tableNameCapitalized],
         summary: `Create or update item(s) for ${tableName}`,
         description: `Insert or upsert item(s) for ${tableName}`,
         parameters: [],

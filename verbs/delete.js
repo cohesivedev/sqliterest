@@ -1,5 +1,5 @@
-const { SQLITE_TO_OPENAPI_FIELD_TYPE, OPERATORS_WHERE, CHARACTER_REGEX } = require('./constants');
-const { capitalize } = require('./helpers');
+const { SQLITE_TO_OPENAPI_FIELD_TYPE, OPERATORS_WHERE, CHARACTER_REGEX } = require('../constants');
+const { capitalize } = require('../helpers');
 
 async function createHandler(tableColumns, knex, tableName) {
 
@@ -83,6 +83,7 @@ function createDocumentation(docs, tableColumns, tableName) {
     const docPath = docs.paths[matcher];
 
     docPath.delete = {
+        tags: [tableNameCapitalized],
         summary: `Delete ${tableName}`,
         description: `Delete all ${tableName} matching the query`,
         parameters: [],

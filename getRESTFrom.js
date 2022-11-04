@@ -3,12 +3,19 @@ const { getDBInfo, responder } = require('./helpers');
 const GET = require('./verbs/get');
 const DELETE = require('./verbs/delete');
 const POST = require('./verbs/post');
+const PUT = require('./verbs/put');
 
 async function getRESTFrom({
     filename,
     openapi_info, /* https://github.com/OAI/OpenAPI-Specification/blob/main/examples/v3.0/api-with-examples.json#L3 */
 }) {
-    const { tableColumnsUnique, tableColumns, tableNames, knex } = await getDBInfo(filename);
+    const { 
+        knex,
+        tableColumnsUnique,
+        tableColumns, 
+        tableNames, 
+        tablePrimaryKeys, 
+    } = await getDBInfo(filename);
 
     // OpenAPI JSON
     const DOCS = {
@@ -57,6 +64,13 @@ async function getRESTFrom({
             responder,
         });
         POST.createDocumentation(DOCS, tableColumns, tableName);
+
+        API.put.push({
+            matcher: `/${tableName}`,
+            handler: await PUT.createHandler(tableColumns, knex, tableName, tableColumnsUnique, tablePrimaryKeys),
+            responder,
+        });
+        PUT.createDocumentation(DOCS, tableColumns, tableName, tablePrimaryKeys);
     }
 
     return { API, knex, DOCS };

@@ -5,7 +5,7 @@
     - Tested with
 
 ```
-# JSON payload s
+# JSON payloads
 
 curl -X POST -H 'Prefer: resolution=merge-duplicates' -H "Content-Type: application/json" -d '{"name":"Atreides","has_nuclear_weapons":1}' http://localhost:3000/sovereignties
 
@@ -20,3 +20,17 @@ curl -X POST -H 'Prefer: resolution=merge-duplicates' -H "Content-Type: text/csv
 - Add in Redoc viewer for the sample Countries API app
     - View by going to the root path http://localhost:3000/
 
+- Added PUT verb for single upsert
+    - Test with
+
+```
+# JSON payload
+
+curl -X PUT -H "Content-Type: application/json" -d '{"name":"Atreides","has_nuclear_weapons":1}' http://localhost:3000/sovereignties?name=eq.Atreides
+
+curl -X PUT -H "Content-Type: application/json" -d '{"name":"AtreidesHouse","has_nuclear_weapons":1}' http://localhost:3000/sovereignties?name=eq.Atreides
+
+curl -X PUT -H "Content-Type: application/json" -d '{"name":"AtreidesHouse","has_nuclear_weapons":1}' http://localhost:3000/sovereignties?name=eq.Atreides
+```
+
+- Added tags to all endpoint documentation so that Redoc can auto-group the verbs by tag

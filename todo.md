@@ -19,14 +19,10 @@
             - [x] `offset` / `limit` (pagination)
         - [x] Returns raw binary with correct MIME type when plucking a BLOB column
         - [ ] Resource embedding
-        - [ ] API documentation in OpenAPI 
-            - [x] Basic with examples
-            - [ ] Detailed with operators
-    - [ ] PUT (Upsert Single)
-    - [ ] PATCH (Update existing)
+    - [x] PUT (Upsert single)
+    - [ ] PATCH (Update a selection)
     - [x] DELETE (Delete)
         - [ ] All supported operators as per GET
-        - [ ] API documentation in OpenAPI 
 - [ ] Samples
     - [ ] ExpressJS
         - [x] Basic server implementing Countries API
@@ -34,7 +30,12 @@
         - [ ] Role-based auth example
         - [ ] 2FA example
     - [ ] Client generation example
-
+- [ ] Additional features
+    - [ ] Create / upsert BLOB values via base64
+    - [ ] Set logging levels via env vars
+        - [ ] Silent flag
+- [x] API documentation in OpenAPI 
+    - [x] Basic documentation for all verbs (with field examples)
 
 ```
 Legend:

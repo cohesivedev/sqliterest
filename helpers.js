@@ -26,8 +26,12 @@ async function getDBInfo(filename) {
     }
 
     const tableColumnsUnique = {};
+    const tablePrimaryKeys = {};
 
     for (const tName of tableNames) {
+        const primaryKey = (await knex.raw(`SELECT name FROM pragma_table_info('${tName}') where pk`))[0].name;
+        tablePrimaryKeys[tName] = primaryKey;
+
         tableColumnsUnique[tName] = [];
         tableColumns[tName] = {};
         const firstRow = await knex(tName).first();
@@ -45,14 +49,15 @@ async function getDBInfo(filename) {
             tableColumns[tName][c] = {
                 type: columns[c].type,
                 isUnique,
+                isPrimaryKey: primaryKey === c,
                 example,
             };
 
-            if(isUnique) tableColumnsUnique[tName].push(c);
+            if (isUnique) tableColumnsUnique[tName].push(c);
         }
     }
 
-    return { tableColumns, tableNames, knex, tableColumnsUnique };
+    return { tableColumns, tableNames, knex, tableColumnsUnique, tablePrimaryKeys };
 }
 
 function responder(req, res) {
