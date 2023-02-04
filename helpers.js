@@ -11,7 +11,12 @@ async function getDBInfo(filename) {
 
     // Used to generate documentation
     const tableColumns = {};
-    const tableNames = await knex.table('sqlite_master').pluck('name').where('type', 'table');
+    const tableNames = await knex.table('sqlite_master')
+        .pluck('name')
+        .where('type', 'table')
+        // Skip the internal table created by SQLite
+        // https://www.sqlite.org/autoinc.html#the_autoincrement_keyword
+        .andWhereNot('name', 'sqlite_sequence');
 
     // From https://stackoverflow.com/a/53629321/7216921
     const tableUniqueColumns = await knex.raw(`
