@@ -15,7 +15,7 @@
     "supertest": "^6.2.4"
   },
   "dependencies": {
-    "better-sqlite3": "^7.6.2",
+    "better-sqlite3": "^9.4.3",
     "file-type": "^17.1.4",
     "knex": "^2.2.0",
     "neat-csv": "^7.0.0"
