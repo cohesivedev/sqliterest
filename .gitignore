@@ -5,3 +5,4 @@ openapi.json
 sdk
 openapitools.json
 countries.copy.sqlite3
+yarn-error.log

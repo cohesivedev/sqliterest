@@ -1,6 +1,6 @@
 const { execSync } = require('child_process');
 const express = require('express');
-const getRESTFrom = require('../getRESTFrom');
+const getRESTFrom = require('../adapters/express');
 const path = require('path');
 
 async function getCountriesApp() {

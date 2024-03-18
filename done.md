@@ -34,3 +34,11 @@ curl -X PUT -H "Content-Type: application/json" -d '{"name":"AtreidesHouse","has
 ```
 
 - Added tags to all endpoint documentation so that Redoc can auto-group the verbs by tag
+
+## 2024-03-18
+- Move to Kysely as the query-builder rather than knex
+- Move to adapters for different HTTP frameworks
+    - Express (CommonJS only)
+    - itty-router (TODO - ESM only)
+    - Hono (TODO - ESM only)
+    - Fastify (TODO)
