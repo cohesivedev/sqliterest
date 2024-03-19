@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { createAdaptorServer } from '@hono/node-server'
+import { createAdaptorServer } from '@hono/node-server';
 import getCountriesApp from './_app.hono.mjs';
 
 describe('Countries API', () => {

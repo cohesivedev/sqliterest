@@ -1,4 +1,4 @@
-import { capitalize } from '../helpers';
+import { capitalize } from '../helpers.mjs';
 import DB from '../db.mjs';
 const { sql } = DB;
 

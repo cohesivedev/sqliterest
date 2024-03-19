@@ -1,5 +1,5 @@
-import { RESERVED_KEYWORDS_POST } from '../../constants';
-import { capitalize } from '../helpers';
+import { RESERVED_KEYWORDS_POST } from '../../constants.mjs';
+import { capitalize } from '../helpers.mjs';
 
 import DB from '../db.mjs';
 const { sql } = DB;
