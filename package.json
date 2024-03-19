@@ -6,8 +6,8 @@
   "license": "MIT",
   "exports": {
     "./express": "./adapters/express/index.js",
-    "./hono": "./adapters/hono/index.js",
-    "./itty-router": "./adapters/itty-router/index.js"
+    "./hono": "./adapters/hono/index.mjs",
+    "./itty-router": "./adapters/itty-router/index.mjs"
   },
   "scripts": {
     "run-sample-countries-api": "node samples/countriesAPI.js",
