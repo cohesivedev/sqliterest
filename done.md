@@ -37,8 +37,9 @@ curl -X PUT -H "Content-Type: application/json" -d '{"name":"AtreidesHouse","has
 
 ## 2024-03-18
 - Move to Kysely as the query-builder rather than knex
+    - Not yet moved!
 - Move to adapters for different HTTP frameworks
     - Express (CommonJS only)
+    - Hono (ESM only)
     - itty-router (TODO - ESM only)
-    - Hono (TODO - ESM only)
-    - Fastify (TODO)
+- Ensure all adapter tests are aligned and thorough!

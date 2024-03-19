@@ -1,5 +1,8 @@
-const { RESERVED_KEYWORDS_POST } = require('../constants');
-const { capitalize } = require('../helpers');
+import { RESERVED_KEYWORDS_POST } from '../../constants';
+import { capitalize } from '../helpers';
+
+import DB from '../db.mjs';
+const { sql } = DB;
 
 function filterKeys(keepKeys, obj) {
     const resultObj = {};
@@ -26,26 +29,23 @@ function addClauseFromReservedKeywords(dbQuery, query, keyword, body) {
     }
 }
 
-async function createHandler(tableColumns, knex, tableName, tableColumnsUnique) {
+async function createHandler(tableColumns, db, tableName, tableColumnsUnique) {
     const csvParser = (await import('neat-csv')).default;
 
-    return async (req, res, next) => {
-        const { query, body } = req;
+    return async (c, next) => {
+        const { req } = c;
+        const query = req.query();
 
-        let processedBody = body;
+        const isUpsert = req.header('Prefer') === 'resolution=merge-duplicates';
+        const isCSV = req.header('Content-Type') === 'text/csv';
 
-        const isUpsert = req.get('Prefer') === 'resolution=merge-duplicates';
-        const isCSV = req.get('Content-Type') === 'text/csv';
+        let processedBody = isCSV ? await csvParser(await req.text()) : await req.json();
 
         req.preparedResponse = {};
 
         try {
             // Defaults
-            let dbQuery = knex.table(tableName);
-
-            if (isCSV) {
-                processedBody = await csvParser(processedBody);
-            }
+            let dbQuery = db.insertInto(tableName);
 
             for (const key in query) {
                 if (RESERVED_KEYWORDS_POST.includes(key)) {
@@ -54,17 +54,22 @@ async function createHandler(tableColumns, knex, tableName, tableColumnsUnique) 
                 }
             }
 
-            dbQuery = dbQuery.insert(processedBody);
+            dbQuery = dbQuery.values(processedBody);
 
             if (isUpsert) {
-                dbQuery
-                    .onConflict(tableColumnsUnique[tableName])
-                    .merge();
+                // In case we need to merge everything, we have to build this expression
+                const mergeConflictExpression = {};
+                for (const col in tableColumns[tableName]) {
+                    mergeConflictExpression[col] = sql`excluded.${sql.raw(col)}`;
+                }
+
+                dbQuery = dbQuery.onConflict(oc => oc
+                    .doUpdateSet(mergeConflictExpression)
+                );
             }
 
-            // console.log(dbQuery.toString());
 
-            const resBody = await dbQuery;
+            const resBody = (await dbQuery.execute()).map(insertResult => Number(insertResult.insertId));
 
             req.preparedResponse = {
                 contentType: 'application/json',
@@ -195,7 +200,7 @@ function createDocumentation(docs, tableColumns, tableName) {
 
 }
 
-module.exports = {
+export default {
     createHandler,
     createDocumentation,
 };

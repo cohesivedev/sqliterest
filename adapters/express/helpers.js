@@ -6,6 +6,7 @@ async function getDBInfo(filename) {
     const knex = KNEX({
         client: 'better-sqlite3',
         useNullAsDefault: true,
+        compileSqlOnError: false,
         connection: { filename }
     });
 
@@ -65,6 +66,8 @@ async function getDBInfo(filename) {
     return { tableColumns, tableNames, knex, tableColumnsUnique, tablePrimaryKeys };
 }
 
+// Middleware that finally responds to the client request
+// This is different to a handler which only prepares the response data (e.g. verbs)
 function responder(req, res) {
     const { preparedResponse } = req;
 

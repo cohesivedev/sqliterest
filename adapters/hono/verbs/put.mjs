@@ -1,8 +1,12 @@
-const { capitalize } = require('../helpers');
+import { capitalize } from '../helpers';
+import DB from '../db.mjs';
+const { sql } = DB;
 
-async function createHandler(tableColumns, knex, tableName, tableColumnsUnique, tablePrimaryKeys) {
-    return async (req, res, next) => {
-        const { query, body } = req;
+async function createHandler(tableColumns, db, tableName, tableColumnsUnique, tablePrimaryKeys) {
+    return async (c, next) => {
+        const { req } = c;
+        const query = req.query();
+        const body = await req.json();
 
         req.preparedResponse = {};
 
@@ -21,25 +25,38 @@ async function createHandler(tableColumns, knex, tableName, tableColumnsUnique, 
                 throw 'PUT requires the primary key value to use for upsert operation';
             }
 
-            let dbQuery = knex.table(tableName);
+            let dbQuery = db.updateTable(tableName);
 
             dbQuery = dbQuery
-                .update(body)
+                .set(body)
                 .where(
                     primaryKey,
+                    '=',
                     decodeURIComponent(query[primaryKey].replace('eq.', ''))
                 );
 
             // console.log(dbQuery.toString());
 
-            let resBody = await dbQuery;
+            let resBody = Number((await dbQuery.executeTakeFirst()).numUpdatedRows);
+
+            console.log(resBody);
 
             // If it was meant to be an insert then do this instead
             if (resBody === 0) {
-                resBody = (await knex.table(tableName)
-                    .insert(body)
-                    .onConflict(tableColumnsUnique[tableName])
-                    .merge())[0];
+
+                // In case we need to merge everything, we have to build this expression
+                const mergeConflictExpression = {};
+                for (const col in tableColumns[tableName]) {
+                    mergeConflictExpression[col] = sql`excluded.${sql.raw(col)}`;
+                }
+
+                resBody = Number((await db
+                    .insertInto(tableName)
+                    .values(body)
+                    .onConflict(oc => oc
+                        .doUpdateSet(mergeConflictExpression)
+                    )
+                    .executeTakeFirst()).insertId);
             }
 
             req.preparedResponse = {
@@ -132,7 +149,7 @@ function createDocumentation(docs, tableColumns, tableName, tablePrimaryKeys) {
 
 }
 
-module.exports = {
+export default {
     createHandler,
     createDocumentation,
 };

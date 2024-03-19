@@ -9,6 +9,8 @@ offset
 order
 `);
 
+// https://postgrest.org/en/v12/references/api/tables_views.html#specifying-columns
+// By using the columns query parameter it’s possible to specify the payload keys that will be inserted and ignore the rest of the payload.
 const RESERVED_KEYWORDS_POST = linesToArray(`
 columns
 `);

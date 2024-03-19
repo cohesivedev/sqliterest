@@ -4,5 +4,5 @@ coverage
 openapi.json
 sdk
 openapitools.json
-countries.copy.sqlite3
+countries.copy*.sqlite3
 yarn-error.log

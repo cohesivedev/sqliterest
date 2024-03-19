@@ -1,26 +1,31 @@
-const request = require('supertest');
-const getCountriesApp = require('./countries.app');
+import request from 'supertest';
+import { createAdaptorServer } from '@hono/node-server'
+import getCountriesApp from './_app.hono.mjs';
 
-describe('Countries REST API', () => {
-    let app, knex;
+describe('Countries API', () => {
+    let app, db;
 
     beforeAll(async () => {
         const createdREST = await getCountriesApp();
-        app = createdREST.app;
-        knex = createdREST.knex;
+
+        // See https://github.com/honojs/hono/blob/main/runtime_tests/node/index.test.ts#L23
+        app = createAdaptorServer(createdREST.app);
+
+        db = createdREST.db;
     });
 
-    afterAll(() => {
-        knex.destroy();
-    });
+    afterAll(() => db.destroy());
+
+    // Tests below should be the same across adapters! //
 
     it('returns an error message when an invalid column is queried', async () => {
         const res = await request(app).get('/countries').query({
             area51: 'aliengray',
         });
 
-        expect(res.body).toMatchSnapshot();
+        expect(res.body.error).toMatch(/no such column: area51/);
         expect(res.statusCode).toBe(400);
+        expect(res.body).toMatchSnapshot();
     });
 
     it('queries with EQ', async () => {
@@ -117,8 +122,8 @@ describe('Countries REST API', () => {
             select: 'flag_gif',
         });
 
-        expect(res.headers['content-type']).toBe('image/gif');
         expect(res.body).toMatchSnapshot();
+        expect(res.headers['content-type']).toBe('image/gif');
     });
 
     it('returns with the raw binary if choosing a single BLOB column with a single row (unrecognized binary content)', async () => {
@@ -127,8 +132,8 @@ describe('Countries REST API', () => {
             select: 'flag_gif',
         });
 
-        expect(res.headers['content-type']).toBe('application/octet-stream');
         expect(res.body).toMatchSnapshot();
+        expect(res.headers['content-type']).toBe('application/octet-stream');
     });
 
     it('deletes based on queries with EQ', async () => {
@@ -170,7 +175,7 @@ describe('Countries REST API', () => {
         expect(resDelete3.body).toMatchSnapshot();
 
         const resGetAfter = await request(app).get('/governments');
-        expect(resGetAfter.body).toMatchSnapshot(); 
+        expect(resGetAfter.body).toMatchSnapshot();
     });
 
     it('deletes based on queries with LIKE', async () => {
@@ -214,6 +219,148 @@ describe('Countries REST API', () => {
     it('does not delete if no parameters given', async () => {
         const resDelete = await request(app).del('/countries');
         expect(resDelete.body).toMatchSnapshot();
+    });
+
+    it('posts throws an error if trying to insert with invalid columns', async () => {
+        let res;
+
+        res = await request(app).post('/sovereignties').send({
+            name: 'Atlantis',
+            will_always_be_submerged: 1,
+            has_nuclear_weapons: 1,
+        });
+        expect(res.body).toMatchSnapshot();
+        expect(res.body.error).toMatch(/has no column named/);
+        expect(res.statusCode).toBe(400);
+    });
+
+
+    it('posts inserts a new row and can cherry-pick columns', async () => {
+        let res;
+
+        res = await request(app).post('/sovereignties').send({
+            name: 'Atlantis',
+            has_nuclear_weapons: 1,
+        });
+        expect(res.body).toMatchSnapshot();
+
+        res = await request(app).get('/sovereignties').query({
+            name: 'Atlantis',
+        });
+        expect(res.body).toMatchSnapshot();
+
+        res = await request(app).post('/sovereignties?columns=name,has_nuclear_weapons').send({
+            name: 'Narnia',
+            food_units: 34,
+            has_nuclear_weapons: 1,
+        });
+        expect(res.body).toMatchSnapshot();
+
+        res = await request(app).get('/sovereignties').query({
+            name: 'Narnia',
+        });
+        expect(res.body).toMatchSnapshot();
+    });
+
+    it('posts inserts multiple new rows and can cherry-pick columns from the payloads', async () => {
+        let res;
+
+        res = await request(app).post('/sovereignties?columns=name,has_nuclear_weapons').send([
+            {
+                name: 'Pangea',
+                area_code: 905,
+                populationMillions: 32,
+                has_nuclear_weapons: 0,
+            },
+            {
+                name: 'Eurasia',
+                area_code: 906,
+                populationMillions: 12,
+                has_nuclear_weapons: 1,
+            }
+        ]);
+        expect(res.body).toMatchSnapshot();
+
+        res = await request(app).get('/sovereignties').query({
+            name: 'in.("Pangea","Eurasia")',
+        });
+        expect(res.body).toMatchSnapshot();
+    });
+
+    it('posts updates a new row when upsert header is sent', async () => {
+        let res;
+
+        res = await request(app).post('/sovereignties').set('Prefer', 'resolution=merge-duplicates').send({
+            name: 'Atlantis',
+            has_nuclear_weapons: 0,
+        });
+
+        res = await request(app).get('/sovereignties').query({
+            name: 'Atlantis',
+        });
+        expect(res.body).toMatchSnapshot();
+        expect(res.body[0].has_nuclear_weapons).toBe(0);
+    });
+
+    it('posts inserts rows when sent a CSV', async () => {
+        let res;
+
+        res = await request(app).post('/sovereignties').set('Content-Type', 'text/csv').send([
+            'name,has_nuclear_weapons',
+            'DinoLand,0',
+            'BirdFort,1'
+        ].join('\n'));
+        expect(res.body).toMatchSnapshot();
+
+        res = await request(app).get('/sovereignties').query({
+            name: 'in.("DinoLand","BirdFort")',
+        });
+        expect(res.body).toMatchSnapshot();
+    });
+
+    it('puts upsert only a single row', async () => {
+        let res;
+
+        res = await request(app).put('/sovereignties')
+            .send({ name: 'Fortre55', has_nuclear_weapons: 0 });
+        expect(res.body).toMatchSnapshot(); // 1
+        expect(res.body.error).toBeTruthy();
+        expect(res.statusCode).toBe(400);
+
+        res = await request(app).put('/sovereignties?has_nuclear_weapons=eq.0')
+            .send({ name: 'Fortre55', has_nuclear_weapons: 0 });
+        expect(res.body).toMatchSnapshot(); // 2
+        expect(res.body.error).toBeTruthy();
+        expect(res.statusCode).toBe(400);
+
+        res = await request(app).put('/sovereignties?name=Fortres55')
+            .send([
+                { name: 'Fortre55', has_nuclear_weapons: 0 },
+                { name: 'Fortre56', has_nuclear_weapons: 0 }
+            ]);
+        expect(res.body).toMatchSnapshot(); // 3
+        expect(res.body.error).toBeTruthy();
+        expect(res.statusCode).toBe(400);
+
+        res = await request(app).put('/sovereignties?name=Fortres56')
+            .send({ name: 'Fortre55', has_nuclear_weapons: 0 });
+        expect(res.body).toMatchSnapshot(); // 4
+        expect(res.statusCode).toBe(200);
+
+        res = await request(app).get('/sovereignties').query({
+            name: 'Fortre55',
+        });
+        expect(res.body).toMatchSnapshot(); // 5
+
+        res = await request(app).put('/sovereignties?name=Fortres55')
+            .send({ name: 'Fortre55', has_nuclear_weapons: 1 });
+        expect(res.body).toMatchSnapshot(); // 6
+        expect(res.statusCode).toBe(200);
+
+        res = await request(app).get('/sovereignties').query({
+            name: 'Fortre55',
+        });
+        expect(res.body).toMatchSnapshot(); // 7
     });
 
 });

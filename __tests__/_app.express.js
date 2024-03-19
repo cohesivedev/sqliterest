@@ -10,9 +10,9 @@ async function getCountriesApp() {
     app.use(express.json());
 
     // Ensure we keep a master copy free of changes from tests
-    execSync('rm countries.copy.sqlite3 ; cp countries.sqlite3 countries.copy.sqlite3');
+    execSync('rm countries.copy.express.sqlite3 ; cp countries.sqlite3 countries.copy.express.sqlite3');
 
-    const filename = path.resolve('./countries.copy.sqlite3');
+    const filename = path.resolve('./countries.copy.express.sqlite3');
 
     const { DOCS, API, knex } = await getRESTFrom({
         filename,

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Countries REST API deletes based on queries with EQ 1`] = `
+exports[`Countries API deletes based on queries with EQ 1`] = `
 Array [
   Object {
     "iso3166alpha2": "AD",
@@ -9,11 +9,11 @@ Array [
 ]
 `;
 
-exports[`Countries REST API deletes based on queries with EQ 2`] = `Object {}`;
+exports[`Countries API deletes based on queries with EQ 2`] = `Object {}`;
 
-exports[`Countries REST API deletes based on queries with EQ 3`] = `Array []`;
+exports[`Countries API deletes based on queries with EQ 3`] = `Array []`;
 
-exports[`Countries REST API deletes based on queries with IN 1`] = `
+exports[`Countries API deletes based on queries with IN 1`] = `
 Array [
   Object {
     "iso3166alpha3": "AUS",
@@ -23,11 +23,11 @@ Array [
 ]
 `;
 
-exports[`Countries REST API deletes based on queries with IN 2`] = `Object {}`;
+exports[`Countries API deletes based on queries with IN 2`] = `Object {}`;
 
-exports[`Countries REST API deletes based on queries with IN 3`] = `Array []`;
+exports[`Countries API deletes based on queries with IN 3`] = `Array []`;
 
-exports[`Countries REST API deletes based on queries with IS 1`] = `
+exports[`Countries API deletes based on queries with IS 1`] = `
 Array [
   Object {
     "is_monarchy": 1,
@@ -72,15 +72,15 @@ Array [
 ]
 `;
 
-exports[`Countries REST API deletes based on queries with IS 2`] = `Object {}`;
+exports[`Countries API deletes based on queries with IS 2`] = `Object {}`;
 
-exports[`Countries REST API deletes based on queries with IS 3`] = `Object {}`;
+exports[`Countries API deletes based on queries with IS 3`] = `Object {}`;
 
-exports[`Countries REST API deletes based on queries with IS 4`] = `Object {}`;
+exports[`Countries API deletes based on queries with IS 4`] = `Object {}`;
 
-exports[`Countries REST API deletes based on queries with IS 5`] = `Array []`;
+exports[`Countries API deletes based on queries with IS 5`] = `Array []`;
 
-exports[`Countries REST API deletes based on queries with LIKE 1`] = `
+exports[`Countries API deletes based on queries with LIKE 1`] = `
 Array [
   Object {
     "iso3166alpha3": "ARE",
@@ -101,17 +101,140 @@ Array [
 ]
 `;
 
-exports[`Countries REST API deletes based on queries with LIKE 2`] = `Object {}`;
+exports[`Countries API deletes based on queries with LIKE 2`] = `Object {}`;
 
-exports[`Countries REST API deletes based on queries with LIKE 3`] = `Array []`;
+exports[`Countries API deletes based on queries with LIKE 3`] = `Array []`;
 
-exports[`Countries REST API does not delete if no parameters given 1`] = `
+exports[`Countries API does not delete if no parameters given 1`] = `
 Object {
   "error": "No deletion parameters provided; total table deletion will not occur",
 }
 `;
 
-exports[`Countries REST API queries with EQ 1`] = `
+exports[`Countries API posts inserts a new row and can cherry-pick columns 1`] = `
+Array [
+  14,
+]
+`;
+
+exports[`Countries API posts inserts a new row and can cherry-pick columns 2`] = `
+Array [
+  Object {
+    "has_nuclear_weapons": 1,
+    "name": "Atlantis",
+  },
+]
+`;
+
+exports[`Countries API posts inserts a new row and can cherry-pick columns 3`] = `
+Array [
+  15,
+]
+`;
+
+exports[`Countries API posts inserts a new row and can cherry-pick columns 4`] = `
+Array [
+  Object {
+    "has_nuclear_weapons": 1,
+    "name": "Narnia",
+  },
+]
+`;
+
+exports[`Countries API posts inserts multiple new rows and can cherry-pick columns from the payloads 1`] = `
+Array [
+  17,
+]
+`;
+
+exports[`Countries API posts inserts multiple new rows and can cherry-pick columns from the payloads 2`] = `
+Array [
+  Object {
+    "has_nuclear_weapons": 1,
+    "name": "Eurasia",
+  },
+  Object {
+    "has_nuclear_weapons": 0,
+    "name": "Pangea",
+  },
+]
+`;
+
+exports[`Countries API posts inserts rows when sent a CSV 1`] = `
+Array [
+  19,
+]
+`;
+
+exports[`Countries API posts inserts rows when sent a CSV 2`] = `
+Array [
+  Object {
+    "has_nuclear_weapons": 1,
+    "name": "BirdFort",
+  },
+  Object {
+    "has_nuclear_weapons": 0,
+    "name": "DinoLand",
+  },
+]
+`;
+
+exports[`Countries API posts throws an error if trying to insert with invalid columns 1`] = `
+Object {
+  "error": "table sovereignties has no column named will_always_be_submerged",
+}
+`;
+
+exports[`Countries API posts updates a new row when upsert header is sent 1`] = `
+Array [
+  Object {
+    "has_nuclear_weapons": 0,
+    "name": "Atlantis",
+  },
+]
+`;
+
+exports[`Countries API puts upsert only a single row 1`] = `
+Object {
+  "error": "Cannot update \\"sovereignties\\" item without specifying primary key!",
+}
+`;
+
+exports[`Countries API puts upsert only a single row 2`] = `
+Object {
+  "error": "PUT requires the primary key value to use for upsert operation",
+}
+`;
+
+exports[`Countries API puts upsert only a single row 3`] = `
+Object {
+  "error": "PUT is only available for singular upserts!",
+}
+`;
+
+exports[`Countries API puts upsert only a single row 4`] = `20`;
+
+exports[`Countries API puts upsert only a single row 5`] = `
+Array [
+  Object {
+    "has_nuclear_weapons": 0,
+    "name": "Fortre55",
+  },
+]
+`;
+
+exports[`Countries API puts upsert only a single row 6`] = `20`;
+
+exports[`Countries API puts upsert only a single row 7`] = `
+Array [
+  Object {
+    "has_nuclear_weapons": 1,
+    "name": "Fortre55",
+  },
+]
+`;
+
+exports[`Countries API queries with EQ 1`] = `
 Array [
   Object {
     "iso3166alpha3": "CAN",
@@ -121,7 +244,7 @@ Array [
 ]
 `;
 
-exports[`Countries REST API queries with EQ is unchanged when trying to query through blob column 1`] = `
+exports[`Countries API queries with EQ is unchanged when trying to query through blob column 1`] = `
 Array [
   Object {
     "name": "Canada",
@@ -130,7 +253,7 @@ Array [
 ]
 `;
 
-exports[`Countries REST API queries with IN 1`] = `
+exports[`Countries API queries with IN 1`] = `
 Array [
   Object {
     "iso3166alpha3": "AUS",
@@ -145,7 +268,7 @@ Array [
 ]
 `;
 
-exports[`Countries REST API queries with IS 1`] = `
+exports[`Countries API queries with IS 1`] = `
 Array [
   Object {
     "name": "United States",
@@ -162,7 +285,7 @@ Array [
 ]
 `;
 
-exports[`Countries REST API queries with IS 2`] = `
+exports[`Countries API queries with IS 2`] = `
 Array [
   Object {
     "name": "Norway",
@@ -188,7 +311,7 @@ Array [
 ]
 `;
 
-exports[`Countries REST API queries with IS 3`] = `
+exports[`Countries API queries with IS 3`] = `
 Array [
   Object {
     "name": "UN observer state",
@@ -199,7 +322,7 @@ Array [
 ]
 `;
 
-exports[`Countries REST API queries with IS 4`] = `
+exports[`Countries API queries with IS 4`] = `
 Array [
   Object {
     "name": "Afghanistan",
@@ -207,7 +330,7 @@ Array [
 ]
 `;
 
-exports[`Countries REST API queries with LIKE 1`] = `
+exports[`Countries API queries with LIKE 1`] = `
 Array [
   Object {
     "iso3166alpha3": "ARE",
@@ -232,7 +355,7 @@ Array [
 ]
 `;
 
-exports[`Countries REST API queries with LIMIT, OFFSET, and ORDER 1`] = `
+exports[`Countries API queries with LIMIT, OFFSET, and ORDER 1`] = `
 Array [
   Object {
     "iso3166alpha3": "DZA",
@@ -267,7 +390,7 @@ Array [
 ]
 `;
 
-exports[`Countries REST API queries with LT (Less Than) 1`] = `
+exports[`Countries API queries with LT (Less Than) 1`] = `
 Array [
   Object {
     "iso3166alpha3": "AFG",
@@ -297,13 +420,13 @@ Array [
 ]
 `;
 
-exports[`Countries REST API returns an error message when an invalid column is queried 1`] = `
+exports[`Countries API returns an error message when an invalid column is queried 1`] = `
 Object {
-  "error": "select * from \`countries\` where area51 = 'aliengray' limit 10 - no such column: area51",
+  "error": "no such column: area51",
 }
 `;
 
-exports[`Countries REST API returns with the raw binary if choosing a single BLOB column with a single row (unrecognized binary content) 1`] = `
+exports[`Countries API returns with the raw binary if choosing a single BLOB column with a single row (unrecognized binary content) 1`] = `
 Object {
   "data": Array [
     52,
@@ -519,7 +642,7 @@ Object {
 }
 `;
 
-exports[`Countries REST API returns with the raw binary if choosing a single BLOB column with a single row 1`] = `
+exports[`Countries API returns with the raw binary if choosing a single BLOB column with a single row 1`] = `
 Object {
   "data": Array [
     71,
