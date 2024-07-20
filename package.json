@@ -22,7 +22,7 @@
     "supertest": "^6.2.4"
   },
   "dependencies": {
-    "better-sqlite3": "^9.4.3",
+    "better-sqlite3": "^11.1.2",
     "file-type": "^17.1.4",
     "knex": "^3.1.0",
     "kysely": "^0.27.3",
