@@ -43,7 +43,7 @@ async function getDBInfo(filename) {
         const firstRow = await knex(tName).first();
         const columns = await knex.table(tName).columnInfo();
         for (const c in columns) {
-            let example = firstRow[c];
+            let example = firstRow && firstRow[c] || '';
 
             if (Buffer.isBuffer(example)) {
                 example = '<binary data>';
