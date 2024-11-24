@@ -4,7 +4,7 @@ async function createHandler(tableColumns, knex, tableName, tableColumnsUnique, 
     return async (req, res, next) => {
         const { body } = req;
         let { query } = req;
-        query = { ...query, ...req.queryOverides };
+        query = { ...query, ...req.queryOverrides };
 
         req.preparedResponse = {};
 

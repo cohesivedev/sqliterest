@@ -24,7 +24,7 @@ async function createHandler(tableColumns, db, tableName) {
 
     return async (c, next) => {
         const { req } = c;
-        const query = { ...req.query(), ...req.queryOverides };
+        const query = { ...req.query(), ...req.queryOverrides };
 
         req.preparedResponse = {};
 
