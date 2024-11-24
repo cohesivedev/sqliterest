@@ -45,27 +45,31 @@ async function getRESTFrom({
 
     for (const tableName of tableNames) {
         API.get.push({
+            tableName,
             matcher: `/${tableName}`,
             handler: await GET.createHandler(tableColumns, knex, tableName),
             responder,
         });
         GET.createDocumentation(DOCS, tableColumns, tableName);
-
+        
         API.delete.push({
+            tableName,
             matcher: `/${tableName}`,
             handler: await DELETE.createHandler(tableColumns, knex, tableName),
             responder,
         });
         DELETE.createDocumentation(DOCS, tableColumns, tableName);
-
+        
         API.post.push({
+            tableName,
             matcher: `/${tableName}`,
             handler: await POST.createHandler(tableColumns, knex, tableName, tableColumnsUnique),
             responder,
         });
         POST.createDocumentation(DOCS, tableColumns, tableName);
-
+        
         API.put.push({
+            tableName,
             matcher: `/${tableName}`,
             handler: await PUT.createHandler(tableColumns, knex, tableName, tableColumnsUnique, tablePrimaryKeys),
             responder,

@@ -46,6 +46,7 @@ export default async function getRESTFrom({
 
     for (const tableName of tableNames) {
         API.get.push({
+            tableName,
             matcher: `/${tableName}`,
             handler: await GET.createHandler(tableColumns, db, tableName),
             responder,
@@ -53,6 +54,7 @@ export default async function getRESTFrom({
         GET.createDocumentation(DOCS, tableColumns, tableName);
 
         API.delete.push({
+            tableName,
             matcher: `/${tableName}`,
             handler: await DELETE.createHandler(tableColumns, db, tableName),
             responder,
@@ -60,6 +62,7 @@ export default async function getRESTFrom({
         DELETE.createDocumentation(DOCS, tableColumns, tableName);
 
         API.post.push({
+            tableName,
             matcher: `/${tableName}`,
             handler: await POST.createHandler(tableColumns, db, tableName, tableColumnsUnique),
             responder,
@@ -67,6 +70,7 @@ export default async function getRESTFrom({
         POST.createDocumentation(DOCS, tableColumns, tableName);
 
         API.put.push({
+            tableName,
             matcher: `/${tableName}`,
             handler: await PUT.createHandler(tableColumns, db, tableName, tableColumnsUnique, tablePrimaryKeys),
             responder,
