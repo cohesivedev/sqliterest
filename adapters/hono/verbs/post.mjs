@@ -40,6 +40,7 @@ async function createHandler(tableColumns, db, tableName, tableColumnsUnique) {
         const isCSV = req.header('Content-Type') === 'text/csv';
 
         let processedBody = isCSV ? await csvParser(await req.text()) : await req.json();
+        processedBody = { ...processedBody, ...req.bodyOverrides };
 
         req.preparedResponse = {};
 

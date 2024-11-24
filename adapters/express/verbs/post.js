@@ -35,19 +35,20 @@ async function createHandler(tableColumns, knex, tableName, tableColumnsUnique) 
         query = { ...query, ...req.queryOverrides };
 
         let processedBody = body;
-
+        
         const isUpsert = req.get('Prefer') === 'resolution=merge-duplicates';
         const isCSV = req.get('Content-Type') === 'text/csv';
-
+        
         req.preparedResponse = {};
-
+        
         try {
             // Defaults
             let dbQuery = knex.table(tableName);
-
+            
             if (isCSV) {
                 processedBody = await csvParser(processedBody);
             }
+            processedBody = { ...processedBody, ...req.bodyOverrides };
 
             for (const key in query) {
                 if (RESERVED_KEYWORDS_POST.includes(key)) {

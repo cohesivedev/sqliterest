@@ -6,7 +6,8 @@ async function createHandler(tableColumns, db, tableName, tableColumnsUnique, ta
     return async (c, next) => {
         const { req } = c;
         const query = { ...req.query(), ...req.queryOverrides };
-        const body = await req.json();
+        let body = await req.json();
+        body = { ...body, ...req.bodyOverrides };
 
         req.preparedResponse = {};
 
