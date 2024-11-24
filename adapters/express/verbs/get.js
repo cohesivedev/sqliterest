@@ -25,7 +25,8 @@ async function createHandler(tableColumns, knex, tableName) {
     const { fileTypeFromBuffer } = await import('file-type');
 
     return async (req, res, next) => {
-        const { query } = req;
+        let { query } = req;
+        query = { ...query, ...req.queryOverides };
 
         req.preparedResponse = {};
 

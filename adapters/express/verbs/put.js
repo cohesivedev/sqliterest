@@ -2,7 +2,9 @@ const { capitalize } = require('../helpers');
 
 async function createHandler(tableColumns, knex, tableName, tableColumnsUnique, tablePrimaryKeys) {
     return async (req, res, next) => {
-        const { query, body } = req;
+        const { body } = req;
+        let { query } = req;
+        query = { ...query, ...req.queryOverides };
 
         req.preparedResponse = {};
 

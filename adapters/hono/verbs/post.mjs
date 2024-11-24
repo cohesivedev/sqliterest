@@ -34,7 +34,7 @@ async function createHandler(tableColumns, db, tableName, tableColumnsUnique) {
 
     return async (c, next) => {
         const { req } = c;
-        const query = req.query();
+        const query = { ...req.query(), ...req.queryOverides };
 
         const isUpsert = req.header('Prefer') === 'resolution=merge-duplicates';
         const isCSV = req.header('Content-Type') === 'text/csv';

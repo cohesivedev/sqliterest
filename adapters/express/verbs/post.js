@@ -30,7 +30,9 @@ async function createHandler(tableColumns, knex, tableName, tableColumnsUnique) 
     const csvParser = (await import('neat-csv')).default;
 
     return async (req, res, next) => {
-        const { query, body } = req;
+        const { body } = req;
+        let { query } = req;
+        query = { ...query, ...req.queryOverides };
 
         let processedBody = body;
 

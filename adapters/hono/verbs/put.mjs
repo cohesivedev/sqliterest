@@ -5,7 +5,7 @@ const { sql } = DB;
 async function createHandler(tableColumns, db, tableName, tableColumnsUnique, tablePrimaryKeys) {
     return async (c, next) => {
         const { req } = c;
-        const query = req.query();
+        const query = { ...req.query(), ...req.queryOverides };
         const body = await req.json();
 
         req.preparedResponse = {};

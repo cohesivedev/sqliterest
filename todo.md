@@ -23,7 +23,10 @@
     - [ ] PATCH (Update a selection)
     - [x] DELETE (Delete)
         - [ ] All supported operators as per GET
+    - [x] Query overrides via request context
+        - Available via `req.queryOverrides` field
 - [ ] Samples
+    - [x] HonoJS
     - [ ] ExpressJS
         - [x] Basic server implementing Countries API
         - [ ] HTTP Basic auth example
