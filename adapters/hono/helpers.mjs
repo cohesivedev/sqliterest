@@ -46,7 +46,7 @@ export async function getDBInfo(filename) {
 
         for (const c of columns) {
             const { name, dataType } = c;
-            let example = firstRow[name];
+            let example = firstRow && firstRow[name] || '';
 
             if (Buffer.isBuffer(example)) {
                 example = '<binary data>';
